@@ -4,12 +4,10 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
+import { getOperations } from '../services';
+import { currencyFormat }  from '../utils'
 
 
-function currencyFormat(str) {
-    var num = Number(str);
-    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ') + ' €'
-  }
 
   function stringToColor(string) {
     let hash = 0;
@@ -45,7 +43,7 @@ export default function Operations() {
     const [operations, setOperations] = useState([]);
 
     useEffect(() => {
-      fetch('http://localhost:8081/account/1/operations')
+      getOperations()
         .then((response) => response.json())
         .then(json => {
             const result = json;

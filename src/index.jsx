@@ -25,7 +25,8 @@ import TravelingActions from './traveling-actions/traveling-actions';
 import EditAccountDialog from './edit-account-dialog';
 import Operations from './operations/operations';
 import { green , deepPurple} from '@mui/material/colors';
-
+import { getAccounts } from './services';
+import { currencyFormat }  from './utils'
 
 const theme = createTheme({
   palette: {
@@ -38,11 +39,6 @@ const theme = createTheme({
   }
 });
 
-function currencyFormat(str) {
-  var num = Number(str);
-  return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ') + ' €'
-}
-
 export default function RecipeReviewCard() {
 
 
@@ -51,7 +47,7 @@ export default function RecipeReviewCard() {
   const [editACcount, setEditAccount] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:8081/accounts')
+      getAccounts()
       .then((response) => response.json())
       .then(json => {
           const result = json;
