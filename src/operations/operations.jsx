@@ -45,6 +45,7 @@ export default function Operations() {
     useEffect(() => {
       getOperations()
         .then((response) => response.json())
+        .catch(err => setOperations([]))
         .then(json => {
             const result = json;
             setOperations(result);
@@ -53,7 +54,7 @@ export default function Operations() {
 
     return (
         <Box>
-            {operations.map((operation, index) => (
+            {operations?.map((operation, index) => (
                 <Card key={index}  className='my-account' variant="outlined">
                     <CardHeader 
                         avatar={

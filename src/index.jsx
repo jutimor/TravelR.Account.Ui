@@ -49,6 +49,7 @@ export default function RecipeReviewCard() {
   useEffect(() => {
       getAccounts()
       .then((response) => response.json())
+      .catch(err => setAccounts([]))
       .then(json => {
           const result = json;
           setAccounts(result);
@@ -76,7 +77,7 @@ export default function RecipeReviewCard() {
   return (
         <>
           <div className='my-accounts'>
-            {accounts.map((account, index) => (
+            {accounts?.map((account, index) => (
               <Card key={index} className='my-account' variant="outlined">
                 <CardHeader 
                   avatar={
