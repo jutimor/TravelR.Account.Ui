@@ -1,0 +1,50 @@
+{
+    "accounts": [
+      {
+        "id": 1,
+         "name" : "Livret",
+         "amount" : "70.04"
+      },
+      {
+        "id": 2,
+         "name" : "Compte Courant",
+         "amount" : "176.28"
+      },
+      {
+        "id": 3,
+         "name" : "Livret DD",
+         "amount" : "6500"
+      },
+      {
+        "id": 4,
+         "name" : "Assurance vie",
+         "amount" : "1900"
+      }
+  ],
+  "operations" : [
+    {
+        "acountId": 1,
+        "amount": 15.5,
+        "label": "Plein Golf",
+        "category": "Carburant"
+    },
+    {
+        "acountId": 2,
+        "amount": 155.5,
+        "label": "Plein Golf",
+        "category": "Carburant"
+    },
+    {
+        "acountId": 3,
+        "amount": 155.5,
+        "label": "Entretien Golf",
+        "category": "Entretien"
+    },
+    {
+        "acountId": 4,
+        "amount": -60,
+        "label": "Plein Tiguan",
+        "category": "Carburant"
+    }
+]
+}
