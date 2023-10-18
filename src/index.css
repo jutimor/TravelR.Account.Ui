@@ -33,3 +33,9 @@ body {
 .MuiDialog-paper { 
   border-radius: 0 !important;
 }
+
+.field-container {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+}

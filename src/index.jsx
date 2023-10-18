@@ -27,6 +27,10 @@ import Operations from './operations/operations';
 import { green , deepPurple} from '@mui/material/colors';
 import { getAccounts } from './services';
 import { currencyFormat }  from './utils'
+import AddOperationDialog from './operations/add-operation-dialog';
+
+import dayjs from 'dayjs';
+dayjs.locale('fr');
 
 const theme = createTheme({
   palette: {
@@ -45,6 +49,7 @@ export default function RecipeReviewCard() {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState({amount: 0, name : 'name'});
   const [editACcount, setEditAccount] = useState(false);
+  const [addOperation, setAddOperation] = useState(false);
 
   useEffect(() => {
       getAccounts()
@@ -56,7 +61,7 @@ export default function RecipeReviewCard() {
         });
   }, []);
 
-  const handleClose = (account) => {
+  const handleCloseAmount = (account) => {
     
     let accountsTmp = accounts.slice();
     const selectedAccounts = accountsTmp.filter(x => x.id === account.id);
@@ -68,6 +73,11 @@ export default function RecipeReviewCard() {
     setAccounts(accountsTmp);
     setEditAccount(false);
   };
+
+  const handleCloseNewOperation = (operation) => {
+    console.log(operation);
+    setAddOperation(false);
+  }
 
   const editAccount= (account) => {
     setSelectedAccount({...account});
@@ -102,10 +112,11 @@ export default function RecipeReviewCard() {
             ))}
           </div>
           <TravelingActions clicked={
-                  () => setEditAccount(!editACcount)
+                  () => setAddOperation(true)
                 }></TravelingActions>
           <Operations></Operations>
-        <EditAccountDialog opened={editACcount} selectedAccount={selectedAccount}  handleClose={handleClose}></EditAccountDialog>
+        <EditAccountDialog opened={editACcount} selectedAccount={selectedAccount}  handleClose={handleCloseAmount}></EditAccountDialog>
+        <AddOperationDialog opened={addOperation}  handleClose={handleCloseNewOperation}></AddOperationDialog>
       </>
   );  
 }
