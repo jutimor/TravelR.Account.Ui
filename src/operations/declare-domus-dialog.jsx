@@ -28,7 +28,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AddOperationDialog(props) {
+export default function DeclareDomusDialog(props) {
 
   const { opened, handleClose } = props;
 
@@ -84,27 +84,17 @@ export default function AddOperationDialog(props) {
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
-        aria-describedby="Ajout d'une opération"
+        aria-describedby="Déclaration d'un DOMUS"
       >
-        <DialogTitle>{ "Nouvelle opération" }</DialogTitle>
-        <DialogContent className='field-container'>
+        <DialogTitle>{ "Déclaration d'un DOMUS" }</DialogTitle>
+        <DialogContent className=''>
           <div>
-            <div>
-              <ToggleButtonGroup 
-                exclusive= {true}
-                value={vehicule}
-                onChange={handleVehicule}
-                aria-label="outlined primary button group">
-                <ToggleButton variant="contained" className='my-button' value="Golf" ><LocalTaxiIcon /> Golf</ToggleButton>
-                <ToggleButton className='my-button' value="Tiguan"><LocalTaxiIcon /> Tiguan</ToggleButton>
-              </ToggleButtonGroup>
-            </div>
-            <div>
+          <div>
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
                   <DatePicker label="Date de l'operation" dateFormat='DD/MM/YYYY'  value={dayjs(operationDate)} />
               </LocalizationProvider>
             </div>
-
+          <div>
             
             
             <TextField
@@ -127,21 +117,6 @@ export default function AddOperationDialog(props) {
               }}
             />
             </div>
-            <div>
-              <FormControl>
-                <FormLabel id="operation-Category-control">Catégorie</FormLabel>
-                <RadioGroup 
-                  aria-labelledby="operation-Category-label"
-                  defaultValue="carburant"
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel color="primary" value="carburant" control={<Radio />} label="Carburant" />
-                  <FormControlLabel color="primary" value="pneux" control={<Radio />} label="Pneux" />
-                  <FormControlLabel color="secondary" value="entretien" control={<Radio />} label="Entretien" />
-                  <FormControlLabel color="secondary" value="assurance" control={<Radio />} label="Assurance" />
-                  <FormControlLabel color="secondary" value="autre" control={<Radio />} label="Autre" />
-                </RadioGroup>
-              </FormControl>
             </div>
         </DialogContent>
         <DialogActions>

@@ -3,10 +3,12 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-
+import InputAdornment from '@mui/material/InputAdornment';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import TextField from '@mui/material/TextField';
+import EuroIcon from '@mui/icons-material/Euro'; 
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -58,6 +60,13 @@ export default function EditAccountDialog(props) {
             value={controlAmount}
             onChange={e => setcontrolAmount(e.target.value)}
             variant="standard"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <EuroIcon />
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
         <DialogActions>

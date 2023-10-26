@@ -14,7 +14,7 @@ export default function TravelingActions(props) {
                     aria-label="Ajouter une dépense" 
                     color="secondary" 
                     variant="contained"
-                    onClick={props.clicked}
+                    onClick={props.addOperationClicked}
                     startIcon={<CreditCardIcon />}
                 >Ajouter une dépense
                 </Button>
@@ -24,6 +24,8 @@ export default function TravelingActions(props) {
                 aria-label="Déclarer un DOMUS" 
                 color="primary"
                 variant="contained"
+                
+                onClick={props.declareDomusClicked}
                 startIcon={<EuroIcon />}>Déclarer un DOMUS
                 </Button>
             </Tooltip>

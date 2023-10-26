@@ -28,9 +28,7 @@ import { green , deepPurple} from '@mui/material/colors';
 import { getAccounts } from './services';
 import { currencyFormat }  from './utils'
 import AddOperationDialog from './operations/add-operation-dialog';
-
-import dayjs from 'dayjs';
-dayjs.locale('fr');
+import DeclareDomusDialog from './operations/declare-domus-dialog';
 
 const theme = createTheme({
   palette: {
@@ -50,6 +48,7 @@ export default function RecipeReviewCard() {
   const [selectedAccount, setSelectedAccount] = useState({amount: 0, name : 'name'});
   const [editACcount, setEditAccount] = useState(false);
   const [addOperation, setAddOperation] = useState(false);
+  const [declareDomus, setDeclareDomus] = useState(false);
 
   useEffect(() => {
       getAccounts()
@@ -74,8 +73,11 @@ export default function RecipeReviewCard() {
     setEditAccount(false);
   };
 
+  const handleCloseDomus = (domus) => {
+    setDeclareDomus(false);
+  }
+
   const handleCloseNewOperation = (operation) => {
-    console.log(operation);
     setAddOperation(false);
   }
 
@@ -111,12 +113,20 @@ export default function RecipeReviewCard() {
               
             ))}
           </div>
-          <TravelingActions clicked={
+          <TravelingActions 
+            addOperationClicked={
                   () => setAddOperation(true)
-                }></TravelingActions>
+                }
+             
+            declareDomusClicked={
+              () => setDeclareDomus(true)
+            }
+                ></TravelingActions>
           <Operations></Operations>
+          
         <EditAccountDialog opened={editACcount} selectedAccount={selectedAccount}  handleClose={handleCloseAmount}></EditAccountDialog>
         <AddOperationDialog opened={addOperation}  handleClose={handleCloseNewOperation}></AddOperationDialog>
+        <DeclareDomusDialog opened={declareDomus}  handleClose={handleCloseDomus}></DeclareDomusDialog>
       </>
   );  
 }
