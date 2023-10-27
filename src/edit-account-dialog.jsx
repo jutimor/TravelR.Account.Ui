@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function EditAccountDialog(props) {
 
-  const { opened, selectedAccount , handleClose } = props;
+  const { opened, selectedAccount ,handleClose } = props;
   const [controlAmount, setcontrolAmount] = React.useState(selectedAccount.amount); 
 
   React.useEffect(() => {

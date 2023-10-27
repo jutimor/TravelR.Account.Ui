@@ -124,9 +124,17 @@ export default function RecipeReviewCard() {
                 ></TravelingActions>
           <Operations></Operations>
           
-        <EditAccountDialog opened={editACcount} selectedAccount={selectedAccount}  handleClose={handleCloseAmount}></EditAccountDialog>
-        <AddOperationDialog opened={addOperation}  handleClose={handleCloseNewOperation}></AddOperationDialog>
-        <DeclareDomusDialog opened={declareDomus}  handleClose={handleCloseDomus}></DeclareDomusDialog>
+        <EditAccountDialog 
+          opened={editACcount} 
+          selectedAccount={selectedAccount}  
+          handleClose={handleCloseAmount}></EditAccountDialog>
+        <AddOperationDialog 
+          opened={addOperation}  
+          vehicles={['Golf', 'Tiguan', 'Repsol']}
+          handleClose={handleCloseNewOperation}></AddOperationDialog>
+        <DeclareDomusDialog 
+          opened={declareDomus}  
+          handleClose={handleCloseDomus}></DeclareDomusDialog>
       </>
   );  
 }

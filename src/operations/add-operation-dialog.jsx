@@ -24,64 +24,75 @@ import FormLabel from '@mui/material/FormLabel';
 
 import 'dayjs/locale/fr';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
 
 export default function AddOperationDialog(props) {
 
-  const { opened, handleClose } = props;
+  const { opened,  vehicles, handleClose } = props;
 
-  const [ operationDate, setOperationDate ] = React.useState(new Date())
-
-  const [newOperation, setNewOperation] = React.useState({
-    label: '',
-    date: null,
-    amount: 100
+  const [ form, onFormChange ] = React.useState({
+    isValid : false,
+    amount: 0,
+    date: new Date(),
+    selectedVehicle : null,
+    label : '',
+    valid : false
   });
 
-  const setLabel = (label) => {
-    setNewOperation(
-      {
-        label,
-        date: newOperation.date,
-        amount: newOperation.amount
-      }
-    )
-  }
-
-  const setAmount = (amount) => {
-    setNewOperation(
-      {
-        label: newOperation.label,
-        date: newOperation.date,
-        amount: amount
-      }
-    )
-  }
 
   const handleCancel = () => {
-    // handleClose();
+    onFormChange({
+      isValid : false,
+      amount: 0,
+      date: new Date(),
+      selectedVehicle : null,
+      label : '',
+      valid : false
+    });
+    handleClose();
   };
   
   const handleSave = () => {
-    // handleClose({
-    //   label: '',
-    //   date: null,
-    //   amount: 0
-    // });
+    handleClose(form);
   };
 
-  const [vehicule, setVehicule] = React.useState('Golf');
 
-  const handleVehicule = (event, vehicule) => {
-    setVehicule(vehicule);
+  const handleVehicle = (event, vehicle) => {
+    onFormChange({
+      selectedVehicle: vehicle,
+      amount: form.amount,
+      date: form.date,
+      isValid: vehicle && form.amount !== 0 ? true : false
+    })
   };
+
+  const handleAmount = (amount) => { 
+    const amountNumber = amount ? parseFloat(amount): 0;
+    onFormChange({
+      selectedVehicle: form.selectedVehicle,
+      amount: amountNumber,
+      date: form.date,
+      isValid: form.selectedVehicle && amountNumber !== 0 ? true : false
+    })
+  };
+
+  const handleDate = (date) => { 
+    onFormChange({
+      selectedVehicle: form.selectedVehicle,
+      amount: form.amount,
+      date: date.toDate(),
+      isValid: form.selectedVehicle && form.amount !== 0 ? true : false
+    })
+  };
+
+  
 
   return (
       <Dialog
         open={opened}
-        TransitionComponent={Transition}
+        // TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
         aria-describedby="Ajout d'une opération"
@@ -92,31 +103,44 @@ export default function AddOperationDialog(props) {
             <div>
               <ToggleButtonGroup 
                 exclusive= {true}
-                value={vehicule}
-                onChange={handleVehicule}
-                aria-label="outlined primary button group">
-                <ToggleButton variant="contained" className='my-button' value="Golf" ><LocalTaxiIcon /> Golf</ToggleButton>
-                <ToggleButton className='my-button' value="Tiguan"><LocalTaxiIcon /> Tiguan</ToggleButton>
+                value={form.selectedVehicle}
+                onChange={handleVehicle}>
+                  {
+                    vehicles?.map((vehicle, index) => (
+                      <ToggleButton 
+                        key={index} 
+                        role="vehicle" 
+                        variant="contained" 
+                        className='my-button' 
+                        value={vehicle} 
+                        data-testid={vehicle+'-value'}
+                        onChange={handleVehicle}><LocalTaxiIcon /> {vehicle}</ToggleButton>
+                    ))
+                  }
+                    
               </ToggleButtonGroup>
             </div>
             <div>
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-                  <DatePicker label="Date de l'operation" dateFormat='DD/MM/YYYY'  value={dayjs(operationDate)} />
+                  <DatePicker 
+                    label="Date de l'operation" 
+                    dateFormat='DD/MM/YYYY'  
+                    value={dayjs(form.date)} 
+                    onChange={value => handleDate(dayjs(value))} />
               </LocalizationProvider>
             </div>
-
-            
             
             <TextField
               autoFocus
               margin="dense"
               id="amount"
+              inputProps={{ "data-testid": "amount-input" }}
+              data-testid="amount"
               label="Montant"
               type="number"
               fullWidth
-              // defaultValue={selectedAccount.name}
-              value={newOperation.amount}
-              onChange={e => setAmount(e.target.value)}
+              value={form.amount}
+              onChange={e => handleAmount(e.target.value)}
               variant="standard"
               InputProps={{
                 endAdornment: (
@@ -130,7 +154,7 @@ export default function AddOperationDialog(props) {
             <div>
               <FormControl>
                 <FormLabel id="operation-Category-control">Catégorie</FormLabel>
-                <RadioGroup 
+                <RadioGroup  data-testid="category-control"
                   aria-labelledby="operation-Category-label"
                   defaultValue="carburant"
                   name="radio-buttons-group"
@@ -145,9 +169,9 @@ export default function AddOperationDialog(props) {
             </div>
         </DialogContent>
         <DialogActions>
-          <Button className="my-button" onClick={handleCancel} variant="outlined">Annuler</Button>
-          <Button className="my-button" onClick={handleSave} variant="contained">Enregistrer</Button>
+          <Button data-testid="cancel-button" className="my-button" onClick={handleCancel} variant="outlined">Annuler</Button>
+          <Button data-testid="save-button" disabled={!form.isValid} className="my-button" onClick={handleSave} variant="contained">Enregistrer</Button>
         </DialogActions>
       </Dialog>
   );
-}
+} 

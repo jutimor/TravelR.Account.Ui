@@ -34,6 +34,7 @@ export default function TravelingActions(props) {
                     aria-label="Déclarer un déplacement" 
                     color="secondary"
                     variant="contained"
+                    onClick={props.declareFormClicked}
                     startIcon={<CardTravelIcon />}>Déclarer un déplacement
                 </Button>
             </Tooltip>
