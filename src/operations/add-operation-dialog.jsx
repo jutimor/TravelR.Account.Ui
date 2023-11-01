@@ -24,9 +24,9 @@ import FormLabel from '@mui/material/FormLabel';
 
 import 'dayjs/locale/fr';
 
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//   return <Slide direction="up" ref={ref} {...props} />;
-// });
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function AddOperationDialog(props) {
 
@@ -92,7 +92,7 @@ export default function AddOperationDialog(props) {
   return (
       <Dialog
         open={opened}
-        // TransitionComponent={Transition}
+        TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
         aria-describedby="Ajout d'une opération"
