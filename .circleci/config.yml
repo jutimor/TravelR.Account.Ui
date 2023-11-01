@@ -24,7 +24,7 @@ jobs:
           command: "npm install"
       - run:
           name: "Test"
-          command: "npm test -- --coverage --collectCoverage=true"
+          command: "npm test -- --coverage --collectCoverage=true --reporters=jest-junit --watchAll"
       - store_artifacts:
           path: coverage
       - store_test_results:
