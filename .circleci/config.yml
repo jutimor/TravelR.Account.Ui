@@ -8,7 +8,7 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  say-hello:
+ install-test-build:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
@@ -23,15 +23,15 @@ jobs:
           name: "Install"
           command: "npm install"
       - run:
-          name: "Build"
-          command: "npm run build --if-present"
-      - run:
           name: "Test"
           command: "npm test"
+      - run:
+          name: "Build"
+          command: "npm run build --if-present"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  continuous-integration:
     jobs:
-      - say-hello
+      - install-test-build
