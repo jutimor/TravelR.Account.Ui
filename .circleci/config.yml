@@ -24,7 +24,7 @@ jobs:
           command: "npm install"
       - run:
           name: "Test"
-          command: "npm test"
+          command: "npm test -- --coverage"
       - run:
           name: "Build"
           command: "npm run build --if-present"
