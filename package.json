@@ -50,5 +50,14 @@
   "devDependencies": {
     "@testing-library/user-event": "^14.5.1"
   },
-  "jest": {}
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "outputDirectory": "./test_results",
+    "outputName": "junit.xml",
+    "uniqueOutputName": "false",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
+  }
 }

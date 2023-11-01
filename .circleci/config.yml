@@ -28,7 +28,7 @@ jobs:
       - store_artifacts:
           path: coverage
       - store_test_results:
-          path: .
+          path: test_results
       - run:
           name: "Build"
           command: "npm run build --if-present"
