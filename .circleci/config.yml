@@ -15,8 +15,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Install"
+          command: "npm install"
+      - run:
+          name: "Build"
+          command: "npm run build --if-present"
+      - run:
+          name: "Test"
+          command: "npm test"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
