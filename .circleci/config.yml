@@ -27,6 +27,8 @@ jobs:
           command: "npm test -- --coverage --collectCoverage=true"
       - store_artifacts:
           path: coverage
+      - store_test_results
+          path: coverage
       - run:
           name: "Build"
           command: "npm run build --if-present"
