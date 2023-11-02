@@ -25,26 +25,30 @@
     {
         "acountId": 1,
         "amount": 15.5,
-        "label": "Plein Golf",
-        "category": "Carburant"
+        "selectedVehicle": "Golf",
+        "category": "Carburant",
+        "date":"2023-07-21T17:15:30.000Z"
     },
     {
         "acountId": 2,
         "amount": 155.5,
-        "label": "Plein Golf",
-        "category": "Carburant"
+        "selectedVehicle": "Golf",
+        "category": "Carburant",
+        "date":"2023-05-15T17:15:30.000Z"
     },
     {
         "acountId": 3,
         "amount": 135.5,
-        "label": "Entretien Golf",
-        "category": "Entretien"
+        "selectedVehicle": "Golf",
+        "category": "Entretien",
+        "date": "2023-10-09T09:15:30.000Z"
     },
     {
         "acountId": 4,
         "amount": -60,
-        "label": "Plein Tiguan",
-        "category": "Carburant"
+        "selectedVehicle": "Tiguan",
+        "category": "Carburant",
+        "date":"2023-03-05T08:15:30.000Z"
     }
 ]
 }
