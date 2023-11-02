@@ -37,7 +37,7 @@ export default function AddOperationDialog(props) {
     amount: 0,
     date: new Date(),
     selectedVehicle : null,
-    label : '',
+    category: 'Carburant',
     valid : false
   });
 
@@ -48,7 +48,7 @@ export default function AddOperationDialog(props) {
       amount: 0,
       date: new Date(),
       selectedVehicle : null,
-      label : '',
+      category: 'Carburant',
       valid : false
     });
     handleClose();
@@ -86,6 +86,16 @@ export default function AddOperationDialog(props) {
       isValid: form.selectedVehicle && form.amount !== 0 ? true : false
     })
   };
+
+  const handleCategory = (event, category) => {
+    onFormChange({
+      selectedVehicle: form.selectedVehicle,
+      amount: form.amount,
+      date: form.date,
+      category: category,
+      isValid: form.selectedVehicle && form.amount !== 0 ? true : false
+    })
+  }
 
   
 
@@ -158,12 +168,13 @@ export default function AddOperationDialog(props) {
                   aria-labelledby="operation-Category-label"
                   defaultValue="carburant"
                   name="radio-buttons-group"
+                  onChange={handleCategory}
                 >
-                  <FormControlLabel color="primary" value="carburant" control={<Radio />} label="Carburant" />
-                  <FormControlLabel color="primary" value="pneux" control={<Radio />} label="Pneux" />
-                  <FormControlLabel color="secondary" value="entretien" control={<Radio />} label="Entretien" />
-                  <FormControlLabel color="secondary" value="assurance" control={<Radio />} label="Assurance" />
-                  <FormControlLabel color="secondary" value="autre" control={<Radio />} label="Autre" />
+                  <FormControlLabel color="primary" value="Carburant" control={<Radio />} label="Carburant" />
+                  <FormControlLabel color="primary" value="Pneux" control={<Radio />} label="Pneux" />
+                  <FormControlLabel color="secondary" value="Entretien" control={<Radio />} label="Entretien" />
+                  <FormControlLabel color="secondary" value="Assurance" control={<Radio />} label="Assurance" />
+                  <FormControlLabel color="secondary" value="Autre" control={<Radio />} label="Autre" />
                 </RadioGroup>
               </FormControl>
             </div>

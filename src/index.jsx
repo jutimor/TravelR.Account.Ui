@@ -25,7 +25,7 @@ import TravelingActions from './traveling-actions/traveling-actions';
 import EditAccountDialog from './edit-account-dialog';
 import Operations from './operations/operations';
 import { green , deepPurple} from '@mui/material/colors';
-import { getAccounts } from './services';
+import { getAccounts, getOperations } from './services';
 import { currencyFormat }  from './utils'
 import AddOperationDialog from './operations/add-operation-dialog';
 import DeclareDomusDialog from './operations/declare-domus-dialog';
@@ -45,6 +45,7 @@ export default function RecipeReviewCard() {
 
 
   const [accounts, setAccounts] = useState([]);
+  const [operations, setOperations] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState({amount: 0, name : 'name'});
   const [editACcount, setEditAccount] = useState(false);
   const [addOperation, setAddOperation] = useState(false);
@@ -57,6 +58,14 @@ export default function RecipeReviewCard() {
       .then(json => {
           const result = json;
           setAccounts(result);
+        });
+
+      getOperations()
+      .then((response) => response.json())
+      .catch(err => setOperations([]))
+      .then(json => {
+          const result = json;
+          setOperations(result);
         });
   }, []);
 
@@ -79,6 +88,11 @@ export default function RecipeReviewCard() {
 
   const handleCloseNewOperation = (operation) => {
     setAddOperation(false);
+    const newOperationsList = operations.slice();
+    newOperationsList.push(operation);
+    console.log(newOperationsList);
+    setOperations(newOperationsList);
+
   }
 
   const editAccount= (account) => {
@@ -122,7 +136,7 @@ export default function RecipeReviewCard() {
               () => setDeclareDomus(true)
             }
                 ></TravelingActions>
-          <Operations></Operations>
+          <Operations operations={operations}></Operations>
           
         <EditAccountDialog 
           opened={editACcount} 
