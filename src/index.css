@@ -4,26 +4,19 @@ body {
   background-color: beige;
 }
   
-.actions-zone {
-  margin-top: 14px;
-  display: flex;
-  flex-direction: row;
-  gap: 14px;
-} 
 
 .my-accounts {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 14px;
 }
 
 .my-account {
-  flex: 1 1 300px;
+  flex: 1 1;
   min-width: 300px;
   border-radius: 0;
   box-shadow: none;
-  margin-top: 14px;
+  /* margin-top: 14px; */
 }
 
 .my-button {

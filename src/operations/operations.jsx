@@ -1,9 +1,8 @@
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import { currencyFormat }  from '../utils'
-
+import './operations.css'
 
 
   function stringToColor(string) {
@@ -40,9 +39,9 @@ export default function Operations(props) {
   const { operations } = {...props}
 
     return (
-        <Box>
+        <div className="my-operations">
             {operations?.map((operation, index) => (
-                <Card key={index}  className='my-account' variant="outlined">
+                <Card key={index}  className='my-operation' variant="outlined">
                     <CardHeader 
                         avatar={
                             <Avatar {...stringAvatar(operation.selectedVehicle+' '+operation.category)} />
@@ -64,5 +63,5 @@ export default function Operations(props) {
                     </CardHeader>
                 </Card>
             ))}
-        </Box>);
+        </div>);
 }

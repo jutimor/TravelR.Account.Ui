@@ -30,15 +30,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AddOperationDialog(props) {
 
-  const { opened,  vehicles, handleClose } = props;
+  const { opened,  vehicles, handleClose, initialValues } = props;
 
   const [ form, onFormChange ] = React.useState({
-    isValid : false,
-    amount: 0,
-    date: new Date(),
-    selectedVehicle : null,
-    category: 'Carburant',
-    valid : false
+    isValid : initialValues?.isValid ?? false,
+    amount:  initialValues?.amount ?? 0,
+    date:  initialValues?.date ?? new Date(),
+    selectedVehicle :  initialValues?.selectedVehicle ?? null,
+    category:  initialValues?.category ?? 'Carburant',
+    valid :  initialValues?.valid ?? false
   });
 
 
@@ -64,7 +64,8 @@ export default function AddOperationDialog(props) {
       selectedVehicle: vehicle,
       amount: form.amount,
       date: form.date,
-      isValid: vehicle && form.amount !== 0 ? true : false
+      category: form.category,
+      isValid: vehicle && form.amount !== 0 && form.category  ? true : false
     })
   };
 
@@ -74,7 +75,8 @@ export default function AddOperationDialog(props) {
       selectedVehicle: form.selectedVehicle,
       amount: amountNumber,
       date: form.date,
-      isValid: form.selectedVehicle && amountNumber !== 0 ? true : false
+      category: form.category,
+      isValid: form.selectedVehicle && amountNumber !== 0 && form.category  ? true : false
     })
   };
 
@@ -83,7 +85,8 @@ export default function AddOperationDialog(props) {
       selectedVehicle: form.selectedVehicle,
       amount: form.amount,
       date: date.toDate(),
-      isValid: form.selectedVehicle && form.amount !== 0 ? true : false
+      category: form.category,
+      isValid: form.selectedVehicle && form.amount !== 0 && form.category ? true : false
     })
   };
 
@@ -93,7 +96,7 @@ export default function AddOperationDialog(props) {
       amount: form.amount,
       date: form.date,
       category: category,
-      isValid: form.selectedVehicle && form.amount !== 0 ? true : false
+      isValid: form.selectedVehicle && form.amount !== 0 && category ? true : false
     })
   }
 
@@ -104,7 +107,7 @@ export default function AddOperationDialog(props) {
         open={opened}
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
+        onClose={() => handleClose(null)}
         aria-describedby="Ajout d'une opération"
       >
         <DialogTitle>{ "Nouvelle opération" }</DialogTitle>
@@ -166,7 +169,7 @@ export default function AddOperationDialog(props) {
                 <FormLabel id="operation-Category-control">Catégorie</FormLabel>
                 <RadioGroup  data-testid="category-control"
                   aria-labelledby="operation-Category-label"
-                  defaultValue="carburant"
+                  defaultValue="Carburant"
                   name="radio-buttons-group"
                   onChange={handleCategory}
                 >
