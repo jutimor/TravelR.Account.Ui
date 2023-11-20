@@ -30,15 +30,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AddOperationDialog(props) {
 
-  const { opened,  vehicles, handleClose } = props;
+  const { opened,  vehicles, handleClose, initialValues } = props;
 
   const [ form, onFormChange ] = React.useState({
-    isValid : false,
-    amount: 0,
-    date: new Date(),
-    selectedVehicle : null,
-    label : '',
-    valid : false
+    isValid : initialValues?.isValid ?? false,
+    amount:  initialValues?.amount ?? 0,
+    date:  initialValues?.date ?? new Date(),
+    selectedVehicle :  initialValues?.selectedVehicle ?? null,
+    category:  initialValues?.category ?? 'Carburant',
+    valid :  initialValues?.valid ?? false
   });
 
 
@@ -48,7 +48,7 @@ export default function AddOperationDialog(props) {
       amount: 0,
       date: new Date(),
       selectedVehicle : null,
-      label : '',
+      category: 'Carburant',
       valid : false
     });
     handleClose();
@@ -64,7 +64,8 @@ export default function AddOperationDialog(props) {
       selectedVehicle: vehicle,
       amount: form.amount,
       date: form.date,
-      isValid: vehicle && form.amount !== 0 ? true : false
+      category: form.category,
+      isValid: vehicle && form.amount !== 0 && form.category  ? true : false
     })
   };
 
@@ -74,7 +75,8 @@ export default function AddOperationDialog(props) {
       selectedVehicle: form.selectedVehicle,
       amount: amountNumber,
       date: form.date,
-      isValid: form.selectedVehicle && amountNumber !== 0 ? true : false
+      category: form.category,
+      isValid: form.selectedVehicle && amountNumber !== 0 && form.category  ? true : false
     })
   };
 
@@ -83,9 +85,20 @@ export default function AddOperationDialog(props) {
       selectedVehicle: form.selectedVehicle,
       amount: form.amount,
       date: date.toDate(),
-      isValid: form.selectedVehicle && form.amount !== 0 ? true : false
+      category: form.category,
+      isValid: form.selectedVehicle && form.amount !== 0 && form.category ? true : false
     })
   };
+
+  const handleCategory = (event, category) => {
+    onFormChange({
+      selectedVehicle: form.selectedVehicle,
+      amount: form.amount,
+      date: form.date,
+      category: category,
+      isValid: form.selectedVehicle && form.amount !== 0 && category ? true : false
+    })
+  }
 
   
 
@@ -94,7 +107,7 @@ export default function AddOperationDialog(props) {
         open={opened}
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
+        onClose={() => handleClose(null)}
         aria-describedby="Ajout d'une opération"
       >
         <DialogTitle>{ "Nouvelle opération" }</DialogTitle>
@@ -156,14 +169,15 @@ export default function AddOperationDialog(props) {
                 <FormLabel id="operation-Category-control">Catégorie</FormLabel>
                 <RadioGroup  data-testid="category-control"
                   aria-labelledby="operation-Category-label"
-                  defaultValue="carburant"
+                  defaultValue="Carburant"
                   name="radio-buttons-group"
+                  onChange={handleCategory}
                 >
-                  <FormControlLabel color="primary" value="carburant" control={<Radio />} label="Carburant" />
-                  <FormControlLabel color="primary" value="pneux" control={<Radio />} label="Pneux" />
-                  <FormControlLabel color="secondary" value="entretien" control={<Radio />} label="Entretien" />
-                  <FormControlLabel color="secondary" value="assurance" control={<Radio />} label="Assurance" />
-                  <FormControlLabel color="secondary" value="autre" control={<Radio />} label="Autre" />
+                  <FormControlLabel color="primary" value="Carburant" control={<Radio />} label="Carburant" />
+                  <FormControlLabel color="primary" value="Pneux" control={<Radio />} label="Pneux" />
+                  <FormControlLabel color="secondary" value="Entretien" control={<Radio />} label="Entretien" />
+                  <FormControlLabel color="secondary" value="Assurance" control={<Radio />} label="Assurance" />
+                  <FormControlLabel color="secondary" value="Autre" control={<Radio />} label="Autre" />
                 </RadioGroup>
               </FormControl>
             </div>

@@ -1,0 +1,14 @@
+
+.my-operations {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.my-operation {
+    flex: 1 1;
+    min-width: 300px;
+    border-radius: 0;
+    box-shadow: none;
+    /* margin-top: 14px; */
+}

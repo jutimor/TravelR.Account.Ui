@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import Button from "@mui/material/Button";
+import Snackbar from '@mui/material/Snackbar';
+import Skeleton from '@mui/material/Skeleton';
 
 import './index.css';
 
@@ -25,10 +29,11 @@ import TravelingActions from './traveling-actions/traveling-actions';
 import EditAccountDialog from './edit-account-dialog';
 import Operations from './operations/operations';
 import { green , deepPurple} from '@mui/material/colors';
-import { getAccounts } from './services';
+import { getAccounts, getOperations, updateAccount, addAccount, deleteAccount } from './services';
 import { currencyFormat }  from './utils'
 import AddOperationDialog from './operations/add-operation-dialog';
 import DeclareDomusDialog from './operations/declare-domus-dialog';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const theme = createTheme({
   palette: {
@@ -43,53 +48,148 @@ const theme = createTheme({
 
 export default function RecipeReviewCard() {
 
-
+  const [ accountsLoading, setAccountsLoading]= useState(true);
   const [accounts, setAccounts] = useState([]);
-  const [selectedAccount, setSelectedAccount] = useState({amount: 0, name : 'name'});
+  const [operations, setOperations] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState({amount: 0, name : ''});
   const [editACcount, setEditAccount] = useState(false);
   const [addOperation, setAddOperation] = useState(false);
   const [declareDomus, setDeclareDomus] = useState(false);
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  
   useEffect(() => {
       getAccounts()
+      
       .then((response) => response.json())
-      .catch(err => setAccounts([]))
       .then(json => {
-          const result = json;
-          setAccounts(result);
+          if (json.error) {
+            throw new Error("Impossible de récupérer les comptes", {cause: json.message});
+          }
+          setAccounts(json);
+        })
+        .catch(err => {
+          setAccounts([]);
+          setOpenSnackbar(true);
+        });
+
+      getOperations()
+      .then((response) => response.json())
+      .catch(err => {
+        setOperations([]);
+        setOpenSnackbar(true);
+      })
+      .then(json => {
+          const result = json?.sort((a, b) => {
+            if (a.date > b.date) {
+              return -1;
+            }
+            if (a.date < b.date) {
+              return 1;
+            }
+            return 0;
+          });
+          setOperations(result);
+          setAccountsLoading(false);
         });
   }, []);
 
+
   const handleCloseAmount = (account) => {
-    
-    let accountsTmp = accounts.slice();
-    const selectedAccounts = accountsTmp.filter(x => x.id === account.id);
-    if ( selectedAccounts.length === 1)
-    {
-      selectedAccounts[0].amount = account.amount;
-    }
-    
-    setAccounts(accountsTmp);
     setEditAccount(false);
+    setAccountsLoading(true);
+    let accountsTmp = accounts.slice();
+    if (!account)
+    {
+      setAccountsLoading(false);
+      return;
+    } 
+
+    if (!account['_id']) {
+      addAccount(account).then(json => {
+        setAccountsLoading(false);
+        account._id = json.insertedId;
+        accountsTmp.push(account);
+        setAccounts(accountsTmp);
+      });
+    } 
+    else 
+    {
+      const selectedAccounts = accountsTmp.filter(x => x._id === account._id);
+      if ( selectedAccounts.length === 1)
+      {
+        selectedAccounts[0].amount = account.amount;
+        selectedAccounts[0].name = account.name;
+        updateAccount(selectedAccounts[0])
+        .then(json => {
+          if (json.error) {
+            throw new Error("Impossible de récupérer les comptes", {cause: json.message});
+          }
+          setAccounts(accountsTmp);
+          setAccountsLoading(false);
+        })
+        .catch(err => {
+          setAccountsLoading(false);
+          setOpenSnackbar(true);
+        });
+      }
+      
+    }
   };
 
   const handleCloseDomus = (domus) => {
     setDeclareDomus(false);
   }
 
-  const handleCloseNewOperation = (operation) => {
-    setAddOperation(false);
+  const handleCloseNewOperation = (operation) => { 
+
+    if (!operation) {
+      return;
+    }
+
+    const newOperationsList = operations.slice();
+    operation.date = operation.date.toJSON();
+    newOperationsList.push(operation);
+    newOperationsList.sort((a, b) => {
+      if (a.date > b.date) {
+        return -1;
+      }
+      if (a.date < b.date) {
+        return 1;
+      }
+      return 0;
+    });
+
+    setOperations(newOperationsList);
+
   }
 
-  const editAccount= (account) => {
-    setSelectedAccount({...account});
+  const editAccount = (account) => {
+    setSelectedAccount(account);
     setEditAccount(true);
+  }
+
+  const deleteAccountClicked = (account) => {
+    const newAccountsList = accounts.slice();
+    const indexToDelete = newAccountsList.findIndex(item => item._id === account._id);
+
+    deleteAccount(account)
+      .then(() => {
+        
+        if (indexToDelete !== -1)
+        {
+          newAccountsList.splice(indexToDelete, 1);
+        }
+        
+        setAccounts(newAccountsList);
+      })
   }
 
   return (
         <>
           <div className='my-accounts'>
-            {accounts?.map((account, index) => (
+
+            { 
+              accounts?.map((account, index) => (
               <Card key={index} className='my-account' variant="outlined">
                 <CardHeader 
                   avatar={
@@ -98,20 +198,47 @@ export default function RecipeReviewCard() {
                     </Avatar>
                   }
                   title={ account.name} subheader={currencyFormat(account.amount)}
-                  action={
-                        <Tooltip title="Editer le compte">
-                          <IconButton aria-label="Editer le compte"
-                            onClick={
-                              () => editAccount(account) }
-                          >
-                            <ModeIcon />
-                          </IconButton>
-                      </Tooltip>
+                  action={<>
+                            <Tooltip title="Editer le compte">
+                              <IconButton aria-label="Editer le compte"
+                                onClick={
+                                  () => editAccount(account) }
+                              >
+                                <ModeIcon />
+                              </IconButton>
+                            </Tooltip>
+                            
+                            <Tooltip title="Suprimer le compte">
+                              <IconButton aria-label="Suprimer le compte"
+                                onClick={
+                                  () => deleteAccountClicked(account) }
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </>
                   }>
                 </CardHeader>
               </Card>
-              
-            ))}
+
+                )) }
+              {  accountsLoading ? 
+                <Card  className='my-account' variant="outlined">
+                  <CardHeader 
+                    avatar={<Skeleton animation="wave" variant="circular" width={40} height={40} />}
+                    title={ <Skeleton animation="wave"   />} 
+                    subheader={ <Skeleton animation="wave"   width="80%" />}>
+                    </CardHeader>
+                </Card>
+                : ''
+              }
+            <Button className="my-button"
+              aria-label="Ajouter un compte" 
+              color="primary"
+              variant="contained"
+              onClick={() => editAccount({name:'', amount: 0})}
+              startIcon={<AccountBalanceWalletIcon />}>Ajouter un compte
+          </Button>
           </div>
           <TravelingActions 
             addOperationClicked={
@@ -122,8 +249,16 @@ export default function RecipeReviewCard() {
               () => setDeclareDomus(true)
             }
                 ></TravelingActions>
-          <Operations></Operations>
-          
+          <Operations operations={operations}></Operations>
+        
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={() => setOpenSnackbar(false)}
+            message="Erreur d'appel Back"
+          />
+
+
         <EditAccountDialog 
           opened={editACcount} 
           selectedAccount={selectedAccount}  
@@ -152,4 +287,4 @@ export function CustomThemeProvider() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<CustomThemeProvider></CustomThemeProvider>);
+root.render(<StrictMode><CustomThemeProvider></CustomThemeProvider></StrictMode>);

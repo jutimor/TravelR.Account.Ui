@@ -14,27 +14,40 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function EditAccountDialog(props) {
+  const { opened, selectedAccount, handleClose } = props;
 
-  const { opened, selectedAccount ,handleClose } = props;
-  const [controlAmount, setcontrolAmount] = React.useState(selectedAccount.amount); 
+  const [internalAccount, setInternalAccount] = React.useState(selectedAccount); 
 
   React.useEffect(() => {
     if (opened) {
-      setcontrolAmount(selectedAccount.amount);
+      setInternalAccount(selectedAccount);
     }
   }, [selectedAccount, opened]);
+  
+  const changeName = (newValue) =>
+  {
+    setInternalAccount({
+      _id: internalAccount._id,
+      name: newValue,
+      amount: internalAccount.amount
+    })
+  }
+
+  const changeAmount = (newValue) =>
+  {
+    setInternalAccount({
+      _id: internalAccount._id,
+      name: internalAccount.name,
+      amount: newValue
+    })
+  }
 
   const handleCancel = () => {
-    setcontrolAmount(selectedAccount.amount);
     handleClose();
   };
-  
+
   const handleSave = () => {
-    handleClose({
-      id: selectedAccount.id,
-      name: selectedAccount.name,
-      amount: controlAmount
-    });
+    handleClose(internalAccount);
   };
 
   return (
@@ -42,12 +55,25 @@ export default function EditAccountDialog(props) {
         open={opened}
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
+        onClose={() => handleClose(null)}
         aria-describedby="Modification du compte"
       >
-        <DialogTitle>{ selectedAccount?.name }</DialogTitle>
+        <DialogTitle>Compte</DialogTitle>
         <DialogContent>
           
+          <TextField
+            margin="dense"
+            id="name"
+            inputProps={{ "data-testid": "name-input" }}
+            data-testid="name"
+            label="Nom"
+            type="text"
+            fullWidth
+            value={internalAccount.name}
+            onChange={e => changeName(e.target.value)}
+            variant="standard"
+          />
+
           <TextField
           
             autoFocus
@@ -56,9 +82,8 @@ export default function EditAccountDialog(props) {
             label="Montant"
             type="number"
             fullWidth
-            // defaultValue={selectedAccount.name}
-            value={controlAmount}
-            onChange={e => setcontrolAmount(e.target.value)}
+            value={internalAccount.amount}
+            onChange={e => changeAmount(e.target.value)}
             variant="standard"
             InputProps={{
               endAdornment: (

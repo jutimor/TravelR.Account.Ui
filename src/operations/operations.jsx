@@ -1,12 +1,8 @@
-import  { useState, useEffect } from 'react';
-
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
-import { getOperations } from '../services';
 import { currencyFormat }  from '../utils'
-
+import './operations.css'
 
 
   function stringToColor(string) {
@@ -38,32 +34,34 @@ import { currencyFormat }  from '../utils'
     };
   }
   
-export default function Operations() {
+export default function Operations(props) {
 
-    const [operations, setOperations] = useState([]);
-
-    useEffect(() => {
-      getOperations()
-        .then((response) => response.json())
-        .catch(err => setOperations([]))
-        .then(json => {
-            const result = json;
-            setOperations(result);
-          });
-    }, []);
+  const { operations } = {...props}
 
     return (
-        <Box>
+        <div className="my-operations">
             {operations?.map((operation, index) => (
-                <Card key={index}  className='my-account' variant="outlined">
+                <Card key={index}  className='my-operation' variant="outlined">
                     <CardHeader 
                         avatar={
-                            <Avatar {...stringAvatar(operation.label)} />
+                            <Avatar {...stringAvatar(operation.selectedVehicle+' '+operation.category)} />
                         }
-                        title={ operation.label } subheader={ operation.category }
-                        action={currencyFormat(operation.amount)}
-                    ></CardHeader>
+                        title={ operation.selectedVehicle } subheader={ operation.category }
+                        action={
+                          <div>
+                            <span><strong>{currencyFormat(operation.amount)}</strong></span>
+                            <br />
+                            <span> 
+                              { new Date(operation.date).toLocaleDateString("fr-FR", { dateStyle: 'short'})}
+                            </span><br />
+                            <span> 
+                                {new Date(operation.date).toLocaleTimeString("fr-FR", { timeStyle: 'short'}) } 
+                            </span>
+                          </div> 
+                        }
+                    >
+                    </CardHeader>
                 </Card>
             ))}
-        </Box>);
+        </div>);
 }
